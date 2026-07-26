@@ -34,7 +34,7 @@ body {
     position: fixed;
     inset: 0;
     z-index: 0;
-    background-image: url('images/Background.png');
+    background-image: url('images/background.png');
     background-size: cover;
     background-position: center;
     filter: brightness(0.75);
