@@ -97,6 +97,7 @@ let entered = '', attempts = 0, locked = false;
 // Local in-memory caches, kept in sync with Firestore in real time
 let memories = [];
 let messages = [];
+let messageRefreshTimer = null;
 let datePlans = [];
 let wishlists = [];
 
@@ -638,6 +639,7 @@ window.openAddMessageForm = function () {
 async function saveMessage(e) {
     e.preventDefault();
     const text = document.getElementById('messageText').value;
+    const displayDate = document.getElementById('messageDisplayDate').value || null;
     const photoInput = document.getElementById('messagePhotos');
     const btn = document.getElementById('messageSubmitBtn');
 
@@ -654,6 +656,7 @@ async function saveMessage(e) {
             text,
             photos,
             variant,
+            displayDate,
             createdAt: serverTimestamp()
         });
 
@@ -859,8 +862,15 @@ function hexToRgba(input, alpha) {
 }
 
 function renderMessages() {
+    clearTimeout(messageRefreshTimer);
+    const nextLocalMidnight = new Date();
+    nextLocalMidnight.setHours(24, 0, 0, 0);
+    messageRefreshTimer = setTimeout(renderMessages, nextLocalMidnight - new Date());
+
     const container = document.getElementById('messagesList');
-    if (messages.length === 0) {
+    const today = getLocalDateString();
+    const visibleMessages = messages.filter(msg => !msg.displayDate || msg.displayDate <= today);
+    if (visibleMessages.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
                 <p>No love letters yet — write the first one.</p>
@@ -869,7 +879,7 @@ function renderMessages() {
         return;
     }
 
-    container.innerHTML = messages.map(msg => {
+    container.innerHTML = visibleMessages.map(msg => {
         const styleInfo = buildLetterCardStyle(msg.variant);
         return `
         <div class="letter-card" onclick="viewMessage('${msg.id}')" style="${styleInfo.css}">
@@ -882,7 +892,7 @@ function renderMessages() {
             <div class="letter-ribbon"></div>
             <div class="letter-center">
                 <div class="letter-seal" title="">${styleInfo.sealIcon}</div>
-                <div class="letter-date">${formatLetterDate(msg.createdAt)}</div>
+                <div class="letter-date">${formatMessageDisplayDate(msg)}</div>
                 <div class="letter-preview">"${escapeHtml(msg.text.substring(0, 40))}${msg.text.length > 40 ? '...' : ''}"</div>
                 <div class="letter-open-hint">~ tap to unwrap ~</div>
             </div>
@@ -977,7 +987,7 @@ window.viewMessage = function (id) {
     }
 
     document.getElementById('viewMessageText').textContent = msg.text;
-    document.getElementById('viewBookDate').textContent = formatLetterDate(msg.createdAt);
+    document.getElementById('viewBookDate').textContent = formatMessageDisplayDate(msg);
     document.getElementById('viewBookDate').style.color = palette.accentText;
 
     // Set the page decoration based on palette mood (varied)
@@ -1483,6 +1493,19 @@ function formatLetterDate(timestamp) {
         ? timestamp.toDate()
         : new Date();
     return date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+}
+
+function getLocalDateString(date = new Date()) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+function formatMessageDisplayDate(message) {
+    if (!message.displayDate) return formatLetterDate(message.createdAt);
+    const [year, month, day] = message.displayDate.split('-').map(Number);
+    return formatDate(new Date(year, month - 1, day));
 }
 
 function escapeHtml(str) {
