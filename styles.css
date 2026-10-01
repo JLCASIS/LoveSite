@@ -2791,13 +2791,13 @@ form { padding: 24px; }
     }
 
     .message-modal .book-left-content {
-        height: calc(100% - 40px);
+        height: calc(100% - 60px);
     }
 
     .message-modal .book-photos-scatter {
         position: absolute;
         inset: auto 6px 4px;
-        height: 36px;
+        height: 56px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -2808,11 +2808,16 @@ form { padding: 24px; }
     .message-modal .polaroid {
         position: relative;
         inset: auto;
-        flex: 0 1 clamp(32px, 10vw, 48px);
-        width: clamp(32px, 10vw, 48px);
-        height: 34px;
-        padding: 2px 2px 5px;
+        flex: 0 0 clamp(44px, 12vw, 58px);
+        width: clamp(44px, 12vw, 58px);
+        height: clamp(46px, 11vw, 52px);
+        padding: 3px 3px 8px;
         transform: rotate(-3deg);
+    }
+
+    .message-modal .polaroid-tape {
+        top: -4px;
+        height: 8px;
     }
 
     .message-modal .polaroid:nth-child(even) { transform: rotate(3deg); }
@@ -2835,8 +2840,8 @@ form { padding: 24px; }
     .letter-card { height: clamp(260px, 58dvh, 360px); }
 
     .message-modal .book-page-left {
-        flex-basis: clamp(116px, 20dvh, 150px);
-        height: clamp(116px, 20dvh, 150px);
+        flex-basis: clamp(164px, 30dvh, 190px);
+        height: clamp(164px, 30dvh, 190px);
     }
 
     .message-modal .book-decoration { font-size: 1.8rem; margin-bottom: 4px; }
@@ -2845,18 +2850,26 @@ form { padding: 24px; }
     .message-modal .book-date { font-size: 1rem; }
     .message-modal .book-page-corner { width: 24px; height: 24px; }
     .message-modal .letter-text { font-size: 1.1rem; line-height: 1.55; }
-    .message-modal .polaroid { height: 30px; }
     .message-modal::before { inset: -12px; }
     .message-modal::after { inset: -4px; }
 }
 
 @media (max-height: 420px) and (orientation: landscape) and (max-width: 800px) {
     .message-modal .book-page-left {
-        flex-basis: 96px;
-        height: 96px;
+        flex-basis: 108px;
+        height: 108px;
     }
 
-    .message-modal .book-left-content { height: calc(100% - 34px); }
+    .message-modal .book-left-content {
+        height: calc(100% - 52px);
+        padding: 0;
+    }
+    .message-modal .book-photos-scatter { height: 48px; }
+    .message-modal .polaroid {
+        flex-basis: clamp(40px, 8vw, 50px);
+        width: clamp(40px, 8vw, 50px);
+        height: 42px;
+    }
     .message-modal .book-decoration { display: none; }
     .message-modal .book-divider { margin: 4px 0; }
     .message-modal .book-salutation { font-size: 1rem; }
