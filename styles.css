@@ -892,14 +892,6 @@ h1 {
     transform: scale(1);
 }
 
-body.add-buttons-hidden .add-btn {
-    opacity: 0;
-    visibility: hidden;
-    transform: scale(0.6);
-    pointer-events: none;
-    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s linear 0.25s;
-}
-
 .add-btn:hover {
     background: var(--terracotta-dark);
     transform: scale(1.08) rotate(90deg);

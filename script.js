@@ -1545,19 +1545,4 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Start with add buttons hidden (Memories + Messages)
-    document.body.classList.add('add-buttons-hidden');
-});
-
-// Toggle add-buttons visibility with the "P" key
-document.addEventListener('keydown', (e) => {
-    if (e.key.toLowerCase() !== 'p') return;
-    const activeEl = document.activeElement;
-    const inInput = activeEl && (
-        activeEl.tagName === 'INPUT' ||
-        activeEl.tagName === 'TEXTAREA' ||
-        activeEl.isContentEditable
-    );
-    if (inInput) return;
-    document.body.classList.toggle('add-buttons-hidden');
 });
